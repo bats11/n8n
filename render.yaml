@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: n8n-illustratore
+    env: docker
+    plan: free # Puoi cambiare in 'starter' se vuoi più velocità
+    region: frankfurt # La più vicina all'Italia
+    healthCheckPath: /healthz
+    numInstances: 1
+    mountPath: /home/node/.n8n
+    diskSizeGB: 1
+    envVars:
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true # Genera una chiave sicura per te
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-db
+          property: database
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-db
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: n8n-db
+          property: port
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-db
+          property: password
+
+databases:
+  - name: n8n-db
+    plan: free
+    region: frankfurt
